@@ -1,3 +1,3 @@
 defmodule Workflow.Flow.Nodes.Start do
-    defstruct next: nil
+    defstruct view_url_fn: nil, assign_user: nil, next: nil
 end

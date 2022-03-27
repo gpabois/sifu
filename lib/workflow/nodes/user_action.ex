@@ -1,3 +1,3 @@
 defmodule Workflow.Flow.Nodes.UserAction do
-    defstruct view: nil, next: nil
+    defstruct view_url_fn: nil, assign_user_fn: nil, next: nil
 end

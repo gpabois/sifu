@@ -10,6 +10,12 @@ import Config
 config :sifu,
   ecto_repos: [Sifu.Repo]
 
+
+config :workflow,
+  repo: Sifu.Repo,
+  user_table: :users,
+  user_model: Sifu.Accounts.User
+
 # Configures the endpoint
 config :sifu, SifuWeb.Endpoint,
   url: [host: "localhost"],

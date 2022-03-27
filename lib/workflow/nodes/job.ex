@@ -1,3 +1,3 @@
 defmodule Workflow.Flow.Nodes.Job do
-    defstruct work: nil, next: nil
+    defstruct work_fn: nil, next: nil
 end

@@ -1,25 +1,39 @@
 defmodule Workflow.Task do
-    defmacro mixin(process_type) do
-        Ecto.Schema.belongs_to :process, unquote(process_type)
-        Ecto.Schema.has_one :previous, __MODULE__
-        Ecto.Schema.field :flow_node_name, :string
-        Ecto.Schema.field :token, :string
-        Ecto.Schema.field :status, :string, default: :created
-        Ecto.Schema.field :status_complement, :string, default: ""
-        Ecto.Schema.field :started_at, :boolean
-        Ecto.Schema.field :finished_at, :boolean 
+    use Ecto.Schema
+    import Ecto.Query
+    import Ecto.Changeset
+
+    @repo Application.fetch_env!(:workflow, :repo)
+
+    schema "workflow_tasks" do
+        belongs_to :process, Workflow.Process
+        belongs_to :assigned_to, Application.fetch_env!(:workflow, :user_model)
+        field :flow_node_name, :string
+        field :status, :string, default: "created"
+        field :status_complement, :string, default: ""
+        field :started_at, :naive_datetime
+        field :finished_at, :naive_datetime
     end
 
-    def update(%__MODULE__{} = task, attrs) do
-        __MODULE__.update(task, attrs)
-    end
-
-    def create(%__MODULE__{} = task, attrs) do
-        __MODULE__.create(task, attrs)
-    end
-    
-    def set_status(task, status) do
+    def creation_changeset(%__MODULE__{} = task, attrs) do
         task
-        |> Map.put(:status, status)
+        |> cast(attrs, [:process_id, :flow_node_name])
+        |> validate_required([:process_id, :flow_node_name])
     end
+
+    def update_changeset(%__MODULE__{} = task, attrs) do
+        task
+        |> cast(attrs, [:status, :status_complement, :finished_at])
+    end
+
+    def to_process() do
+        from(task in __MODULE__, where: task.status in ["created", "done"]) |> @repo.all
+    end
+
+    def get_flow_node(task) do
+        process = @repo.get(Workflow.Process, task.process_id)
+        flow = Workflow.Flow.get_flow(process.flow_type)
+        Workflow.Flow.get_flow_node(flow, task.flow_node_name)
+    end
+
 end
