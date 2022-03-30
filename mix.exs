@@ -34,6 +34,8 @@ defmodule Sifu.MixProject do
   defp deps do
     [
       {:oban, "~> 2.11"},
+      {:arc, "~> 0.11.0"},
+      {:arc_ecto, "~> 0.11.3"},
       {:phoenix, "~> 1.6.6"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},

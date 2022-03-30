@@ -10,11 +10,16 @@ import Config
 config :sifu,
   ecto_repos: [Sifu.Repo]
 
+config :arc,
+  storage: Arc.Storage.Local
 
 config :workflow,
-  repo: Sifu.Repo,
   user_table: :users,
   user_model: Sifu.Accounts.User
+
+config :workflow, Oban,
+  repo: Workflow.Repo,
+  queues: [default: 10]
 
 # Configures the endpoint
 config :sifu, SifuWeb.Endpoint,
