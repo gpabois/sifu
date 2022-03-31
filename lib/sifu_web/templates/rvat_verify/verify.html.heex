@@ -1,5 +1,6 @@
 <div class="fr-container">
     <h1>Vérification</h1>
 
+    <%= link "Document", to: Sifu.Document.urls(@process.context["document"] |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)).original %>
     
 </div>

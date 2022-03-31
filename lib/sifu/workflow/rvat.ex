@@ -19,10 +19,10 @@ defmodule Sifu.Workflow.RVAT do
     end
 
     @types %{
-        document: Sifu.Document.Type, 
+        document: Sifu.Document.Type,
         approved: :boolean,
         verified: :boolean,
-        approved_by_id: :integer, 
+        approved_by_id: :integer,
         verified_by_id: :integer
     }
 

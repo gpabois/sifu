@@ -3,7 +3,7 @@ defmodule SifuWeb.RVATVerifyController do
 
     def verify(conn, %{"id" => task_id}) do
         task = Workflow.Repo.get(Workflow.Task, task_id)
-        process = Workflow.Repo.get(Workflow.Process, task.id)
+        process = Workflow.Repo.get(Workflow.Process, task.process_id)
 
         render conn, "verify.html", task: task, process: process
     end
