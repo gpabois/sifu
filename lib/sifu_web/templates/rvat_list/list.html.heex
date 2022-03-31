@@ -1,0 +1,42 @@
+<div class="fr-container">
+    <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+        <div class="fr-collapse" id="breadcrumb-1">
+            <ol class="fr-breadcrumb__list">
+                <li>
+                    <a class="fr-breadcrumb__link" href="/">Accueil</a>
+                </li>
+                <li>
+                    <a class="fr-breadcrumb__link" aria-current="page" href="/rvat">RVAT</a>
+                </li>
+            </ol>
+        </div>
+    </nav>
+
+    <h1>Liste des RVAT</h1>
+
+    <div class="fr-table">
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Nom du document</td>
+                    <td>Status</td>
+                    <td>Crée le</td>
+                    <td>Terminé le</td>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for process <- @processes do %>
+                <tr>
+                    <td><%= link process.id, to: Routes.rvat_index_path(@conn, :index, process.id) %></td>
+                    <td><%= process.context["document"]["file_name"] %></td>
+                    <td><%= process.status %></td>
+                    <td><%= if process.created_at != nil, do: Timex.from_now(process.created_at, "fr"), else: "N/D" %></td>
+                    <td><%= if process.finished_at != nil, do: Timex.from_now(process.finished_at, "fr"), else: "N/D" %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

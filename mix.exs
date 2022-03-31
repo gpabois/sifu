@@ -38,6 +38,7 @@ defmodule Sifu.MixProject do
       {:arc_ecto, "~> 0.11.3"},
       {:phoenix, "~> 1.6.6"},
       {:phoenix_ecto, "~> 4.4"},
+      {:timex, "~> 3.7"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},

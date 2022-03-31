@@ -1,0 +1,40 @@
+<div class="fr-container">
+    <h1>Travaux</h1>
+
+    <div class="fr-table">
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Worker</td>
+                    <td>Etat</td>
+                    <td>Arguments</td>
+                    <td>Erreur</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for job <- @jobs do %>
+                <tr>
+                    <td><%= job.id %></td>
+                    <td><%= job.worker %></td>
+                    <td><%= job.state %></td>
+                    <td><%= Jason.encode!(job.args) %></td>
+                    <td>
+                        <%= for error <- job.errors do %>
+                            <p><%= error["error"] |> String.split("\n", trim: false)  |> Enum.intersperse(Phoenix.HTML.Tag.tag(:br)) %></p>
+                        <%= end %>
+                    </td>
+                    <td>
+                        <%= case job.state do %>
+                            <%= "retryable" -> %>
+                                <%= link "Réessayer", to: Routes.oban_path(@conn, :retry, job.id), class: "fr-btn" %>
+                            <%= _ -> %>
+                        <% end %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

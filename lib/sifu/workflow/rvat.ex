@@ -27,14 +27,16 @@ defmodule Sifu.Workflow.RVAT do
     }
 
     def insert(changeset) do
+        IO.inspect(changeset)
         changeset
         |> apply_action(:insert)
     end
 
     def initiate_changeset(context, params) do
         {context, @types}
-        |> cast(params |> Map.merge(%{verified: false, approved: false}), [:document, :approved, :verified, :approved_by_id, :verified_by_id])
-        |> validate_required([:document, :verified, :approved, :aproved_by_id, :verified_by_id])
+        |> cast(params |> Map.merge(%{"verified" => false, "approved" => false}), [:approved, :verified, :approved_by_id, :verified_by_id])
+        |> cast_attachments(params, [:document])
+        |> validate_required([:document, :verified, :approved, :approved_by_id, :verified_by_id])
     end
 
     def all() do
@@ -48,7 +50,8 @@ defmodule Sifu.Workflow.RVAT do
     def get_initiate_url(_task) do
     end
 
-    def get_verification_url(_task) do
+    def get_verification_url(task) do
+        SifuWeb.Router.Helpers.rvat_verify_path(SifuWeb.Endpoint, :verify, task.id)
     end
 
     def get_approval_url(_task) do

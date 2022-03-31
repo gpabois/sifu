@@ -350,4 +350,8 @@ defmodule Sifu.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def all_users() do
+    from(u in User) |> Repo.all()
+  end
 end

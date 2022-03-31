@@ -1,10 +1,18 @@
-<ul>
-<%= if @current_user do %>
-  <li><%= @current_user.email %></li>
-  <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
-  <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
-<% else %>
-  <li><%= link "Register", to: Routes.user_registration_path(@conn, :new) %></li>
-  <li><%= link "Log in", to: Routes.user_session_path(@conn, :new) %></li>
-<% end %>
-</ul>
+<div class="fr-header__tools">
+    <div class="fr-header__tools-links">
+        <ul class="fr-btns-group">
+          <%= if @current_user do %>
+            <li><%= link @current_user.email, to: "#", class: "fr-btn" %></li>
+            <li><%= link "Mes tâches", to: Routes.user_tasks_path(@conn, :list), class: "fr-btn" %></li>
+            <li><%= link "Réglages", to: Routes.user_settings_path(@conn, :edit), class: "fr-btn" %></li>
+            <li><%= link "Se déconnecter", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "fr-btn" %></li>
+          <% else %>
+            <li><%= link "S'enregistrer", to: Routes.user_registration_path(@conn, :new), class: "fr-btn" %></li>
+            <li><%= link "Se connecter", to: Routes.user_session_path(@conn, :new), class: "fr-btn" %></li>
+          <% end %>
+          <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home), class: "fr-btn" %></li>
+          <% end %>
+        </ul>
+    </div>
+</div>

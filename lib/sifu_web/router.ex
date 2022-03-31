@@ -41,6 +41,8 @@ defmodule SifuWeb.Router do
     scope "/" do
       pipe_through :browser
 
+      get "/jobs", SifuWeb.ObanController, :list
+      get "/jobs/:id/retry", SifuWeb.ObanController, :retry
       live_dashboard "/dashboard", metrics: SifuWeb.Telemetry
     end
   end
@@ -53,6 +55,7 @@ defmodule SifuWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
+
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
@@ -61,14 +64,6 @@ defmodule SifuWeb.Router do
 
   scope "/", SifuWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    scope "/rvat" do
-      get "/new", RVAT.InitiateController, :new
-      post "/new", RVAT.InitiateController, :create
-
-      get "/:pid", RVAT.IndexController, :index
-    end
-    
 
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create
@@ -83,6 +78,16 @@ defmodule SifuWeb.Router do
   scope "/", SifuWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    scope "/rvat" do
+      get "/",     RVATListController, :list
+      get "/new",  RVATInitiateController, :new
+      post "/new", RVATInitiateController, :create
+      get "/:pid", RVATIndexController, :index
+      get "/verify/:id", RVATVerifyController, :verify
+      post "/verify/:id", RVATVerifyController, :execute
+    end
+
+    get "/users/tasks", UserTasksController, :list
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email

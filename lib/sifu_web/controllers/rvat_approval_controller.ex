@@ -1,0 +1,2 @@
+defmodule SifuWeb.RVATApprovalController do
+end
