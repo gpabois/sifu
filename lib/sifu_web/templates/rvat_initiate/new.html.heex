@@ -1,25 +1,33 @@
 <div class="fr-container">
   <h1>Nouveau RVAT</h1>
   <%= form_for @changeset, Routes.rvat_initiate_path(@conn, :create), [multipart: true, as: :initiate], fn f -> %>
-    <div class="fr-upload-group">
-      <%= label f, :document, "Document", class: "fr-label" %>
-      <%= file_input f, :document, class: "fr-upload" %>
-      <%= error_tag f, :document %>
+    <div class="fr-form-group">
+      <div class="fr-upload-group">
+        <%= label f, :document, "Document", class: "fr-label" %>
+        <%= file_input f, :document, class: "fr-upload" %>
+        <%= error_tag f, :document %>
+      </div>
     </div>
 
-    <%= label f, :synthese, "Synthèse", class: "fr-label" %>
-    <%= textarea f, :synthese, class: "fr-input" %>
-    <%= error_tag f, :synthese %>
+    <div class="fr-form-group">
+      <%= label f, :synthese, "Synthèse", class: "fr-label" %>
+      <%= textarea f, :synthese, class: "fr-input" %>
+      <%= error_tag f, :synthese %>
+    </div>
 
-    <%= label f, :verified_by_id, "Vérificateur", class: "fr-label" %>
-    <%= select f, :verified_by_id,  Enum.map(@users, &{&1.email, &1.id}), class: "fr-select"  %>
-    <%= error_tag f, :verified_by_id %>
+    <div class="fr-form-group">
+      <%= label f, :verified_by_id, "Vérificateur", class: "fr-label" %>
+      <%= select f, :verified_by_id,  Enum.map(@users, &{&1.email, &1.id}), class: "fr-select"  %>
+      <%= error_tag f, :verified_by_id %>
+    </div>
 
 
-    <%= label f, :approved_by_id, "Approbateur", class: "fr-label" %>
-    <%= select f, :approved_by_id,  Enum.map(@users, &{&1.email, &1.id}), class: "fr-select" %>
-    <%= error_tag f, :approved_by_id %>
+    <div class="fr-form-group">
+      <%= label f, :approved_by_id, "Approbateur", class: "fr-label" %>
+      <%= select f, :approved_by_id,  Enum.map(@users, &{&1.email, &1.id}), class: "fr-select" %>
+      <%= error_tag f, :approved_by_id %>
+    </div>
 
-    <div> <%= submit "Soumettre", class: "fr-btn" %> </div>
+    <div class="fr-form-group"> <%= submit "Soumettre", class: "fr-btn" %> </div>
   <% end %>
 </div>
