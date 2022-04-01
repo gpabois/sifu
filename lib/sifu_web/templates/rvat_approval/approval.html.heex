@@ -1,0 +1,34 @@
+<div class="fr-container">
+    <h1>RVAT N° <%= @process.id %> - Vérification</h1>
+
+    <%= render SifuWeb.RVATIndexView, "resume.html", process: @process %>
+
+    <%= form_for @changeset, Routes.rvat_approval_path(@conn, :execute, @task.id), [multipart: true, as: "approval"], fn f -> %>       
+        <div class="fr-form-group   ">
+            <fieldset class="fr-fieldset fr-fieldset--inline">
+                <legend class="fr-fieldset__legend fr-text--regular" id='radio-approval-legend'>
+                    Décision sur la vérification
+                </legend>
+                <div class="fr-fieldset__content">
+                    <div class="fr-radio-group">
+                        <%= radio_button f, :approved, true %>
+                        <%= label f, :verified, "Accepter", class: "fr-label", for: "approval_approved_true"  %>
+                    </div>
+                    <div class="fr-radio-group">
+                        <%= radio_button f, :approved, false %>
+                        <%= label f, :approved, "Refuser", class: "fr-label", for: "approval_approved_false" %>
+                    </div>
+                </div>
+            </fieldset>
+            <%= error_tag f, :approved %>
+        </div>
+
+        <div class="fr-form-group fr-upload-group">
+            <%= label f, :approval_document, "Document corrigé", class: "fr-label" %>
+            <%= file_input f, :approval_document, class: "fr-upload" %>
+            <%= error_tag f, :approval_document %>
+        </div>
+
+        <div class="fr-form-group"> <%= submit "Soumettre", class: "fr-btn" %> </div>
+    <% end %>
+</div>

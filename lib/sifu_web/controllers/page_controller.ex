@@ -2,6 +2,7 @@ defmodule SifuWeb.PageController do
   use SifuWeb, :controller
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    conn
+    |> redirect(to: Routes.rvat_list_path(conn, :list))
   end
 end

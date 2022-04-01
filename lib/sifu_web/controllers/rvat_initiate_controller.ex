@@ -14,7 +14,7 @@ defmodule SifuWeb.RVATInitiateController do
             {:ok, {process, _}} ->
                 conn
                 |> put_flash(:info, "Flux de travail RVAT crée avec succés.")
-                |> redirect(to: SifuWeb.Router.rvat_index_path(conn, :index, process.id))
+                |> redirect(to: Routes.rvat_index_path(conn, :index, process.id))
             {:ok, %{valid?: false} = changeset} -> 
                 render conn, "new.html", changeset: changeset, users: Sifu.Accounts.all_users()
         end

@@ -80,11 +80,18 @@ defmodule SifuWeb.Router do
 
     scope "/rvat" do
       get "/",     RVATListController, :list
+      
       get "/new",  RVATInitiateController, :new
       post "/new", RVATInitiateController, :create
+      
       get "/:pid", RVATIndexController, :index
-      get "/verify/:id", RVATVerifyController, :verify
-      post "/verify/:id", RVATVerifyController, :execute
+      get "/:pid/delete", RVATIndexController, :delete
+
+      get "/:id/verify", RVATVerifyController, :verify
+      post "/:id/verify", RVATVerifyController, :execute
+
+      get "/:id/approve", RVATApprovalController, :approval
+      post "/:id/approve", RVATApprovalController, :execute
     end
 
     get "/users/tasks", UserTasksController, :list

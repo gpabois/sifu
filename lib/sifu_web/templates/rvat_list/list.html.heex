@@ -14,7 +14,7 @@
     </nav>
 
     <h1>Liste des RVAT</h1>
-
+    <%= link "Créer", to: Routes.rvat_initiate_path(@conn, :new), class: "fr-btn" %>
     <div class="fr-table">
         <table>
             <thead>
@@ -24,6 +24,7 @@
                     <td>Status</td>
                     <td>Crée le</td>
                     <td>Terminé le</td>
+                    <td>Actions</td>
                 </tr>
             </thead>
             <tbody>
@@ -31,9 +32,12 @@
                 <tr>
                     <td><%= link process.id, to: Routes.rvat_index_path(@conn, :index, process.id) %></td>
                     <td><%= process.context["document"]["file_name"] %></td>
-                    <td><%= process.status %></td>
+                    <td><%= process.context["status"] %></td>
                     <td><%= if process.created_at != nil, do: Timex.from_now(process.created_at, "fr"), else: "N/D" %></td>
                     <td><%= if process.finished_at != nil, do: Timex.from_now(process.finished_at, "fr"), else: "N/D" %></td>
+                    <td>
+                        <%= link "Supprimer", to: Routes.rvat_index_path(@conn, :delete, process.id), class: "fr-btn" %>
+                    </td>
                 </tr>
                 <% end %>
             </tbody>

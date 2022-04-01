@@ -1,5 +1,23 @@
 <main class="container">
-  <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-  <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+  <%= case get_flash(@conn, :info) do %>
+    <% nil -> %>
+    <% info -> %>
+    <div class="fr-container">
+      <div class="fr-alert fr-alert--info fr-alert--sm">
+        <p><%= info %></p>
+      </div>
+    </div>
+  <% end %>
+  
+  <%= case get_flash(@conn, :error) do %>
+    <% nil -> %>
+    <% error -> %>
+    <div class="fr-container">
+      <div class="fr-alert fr-alert--error fr-alert--sm">
+        <p><%= error %></p>
+      </div>
+    </div>
+  <% end %>
+
   <%= @inner_content %>
 </main>

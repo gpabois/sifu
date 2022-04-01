@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" data-fr-scheme="system">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href={Routes.static_path(@conn, "/assets/favicon/favicon.ico")} type="image/x-icon">
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "Sifu", suffix: " · Phoenix Framework" %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/dsfr/dsfr/dsfr.min.css")}/>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}>
+    <%= live_title_tag assigns[:page_title] || "Accueil", suffix: " · Sifu" %>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/dsfr/dsfr.min.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </head>
   <body>
@@ -25,10 +25,10 @@
                             </div>
                         </div>
                         <div class="fr-header__service">
-                            <a href="/" title="Accueil - [À MODIFIER | Nom du site / service]">
-                              <p class="fr-header__service-title">Nom du site / service</p>
+                            <a href="/" title="Accueil - UD94">
+                              <p class="fr-header__service-title">DRIEAT-IF/UD94/SRIC</p>
                             </a>
-                            <p class="fr-header__service-tagline">baseline - précisions sur l‘organisation</p>
+                            <p class="fr-header__service-tagline">SImplification des FlUx de travail</p>
                         </div>
                     </div>
                     <%= render "_user_menu.html", assigns %>
@@ -37,5 +37,16 @@
         </div>
     </header>
     <%= @inner_content %>
+
+    <script>
+        // Options disponibles à l'initialisation du DSFR
+        window.dsfr = {
+            verbose: true,
+            mode: 'manual'
+        };
+    </script>
+    <script type="module" src={Routes.static_path(@conn, "/dsfr/dsfr/dsfr.module.min.js")}></script>
+    <script type="text/javascript" nomodule  src={Routes.static_path(@conn, "/dsfr/dsfr/dsfr.nomodule.min.js")}></script>
+  
   </body>
 </html>
