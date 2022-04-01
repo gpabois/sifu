@@ -7,5 +7,5 @@
 
 <h3>Synthèse</h3>
 <div class="fr-highlight">
-    <p><%= @process.context["synthese"] %></p>
+    <p align="justify"><%= @process.context["synthese"] |> text_to_html %></p>
 </div>
