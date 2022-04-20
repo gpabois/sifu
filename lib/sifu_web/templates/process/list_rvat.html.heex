@@ -1,0 +1,9 @@
+<div class="fr-container">
+    <h1>Liste des RVAT </h1>
+
+    <%= link "Nouveau", to: Routes.process_path(@conn, :new, "RVAT"), class: "fr-btn" %>
+
+    <%= for process <- @processes do %>
+        <%= process.id %><br>
+    <% end %>
+</div>

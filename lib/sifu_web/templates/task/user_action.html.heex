@@ -1,0 +1,9 @@
+<div class="fr-container">
+    <h1>Action: <%= @task.flow_node_name %> #<%= @task.id %></h1>
+
+    <%= form_for @changeset, Routes.task_path(@conn, :process_user_action, @task.id), [multipart: true, as: :user_action], fn f -> %>
+        <%= SifuWeb.WorkflowFormHelpers.render_fields(f, @fields) %>
+        <%= submit "Envoyer", class: "fr-btn" %>
+    <% end %>
+    <br>
+</div>

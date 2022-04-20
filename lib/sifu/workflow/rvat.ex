@@ -6,96 +6,61 @@ defmodule Sifu.Workflow.RVAT do
     import Ecto.Changeset
     import Ecto.Query
 
-    @behaviour Workflow.Flow
+    alias Workflow.Field
+
+    def user_select_values() do
+        Sifu.Accounts.all_users() 
+        |> Enum.map(fn u -> {u.email, u.id} end) 
+    end
 
     def get_flow() do
-        B.begin("verifier")
-        |> B.user_action("verifier", &get_verification_url/1, &assign_user_for_verification/1, "traitement_decision_verification")
-        |> B.condition("traitement_decision_verification", &check_for_verification?/1, "approuver", "rejetter")
-        |> B.user_action("approuver", &get_approval_url/1, &assign_user_for_approval/1, "traitement_decision_approbation")
-        |> B.condition("traitement_decision_approbation", &check_for_approval?/1, "finaliser", "rejetter")
+        B.begin([
+            # Form fields
+            Field.file(:document, Sifu.Document.Type, label: "Document", required: true),
+            Field.text(:synthese, :string, input_type: :textarea, label: "Synthèse", required: true),
+            Field.select(:verifier_par_id, :string, label: "Vérificateur", values_fn: &user_select_values/0, required: true),
+            Field.select(:approuver_par_id, :string, label: "Approbateur", values_fn: &user_select_values/0, required: true),
+            # Internal fields
+            Field.text(:status, :string, internal: true, default: "en_cours")
+        ], "verifier", 
+            validations: [&cast_attachments(&1, &2, [:document])],
+            view: SifuWeb.ProcessView
+        )
+        |> B.user_action(
+            "verifier", 
+            [
+                Field.boolean(:verifier, 
+                    values: [{"Accepter", true}, {"Refuser", false}], 
+                    input_type: :radios, 
+                    label: "Décision sur la vérification", 
+                    required: true
+                )
+            ], 
+            &assign_user_for_verification/1, 
+            "traitement_decision_verification", 
+            view: SifuWeb.TaskView
+        )
+        |> B.condition(
+            "traitement_decision_verification", 
+            &check_for_verification?/1, 
+            "approuver", 
+            "rejetter"
+        )
+        |> B.user_action("approuver", 
+            [Field.boolean(:approuver, values: [{"Accepter", true}, {"Refuser", false}], input_type: :radios, label: "Décision sur l'approbation", required: true)],  
+            &assign_user_for_approval/1, 
+            "traitement_decision_approbation",
+            view: SifuWeb.TaskView
+        )
+        |> B.condition(
+            "traitement_decision_approbation", 
+            &check_for_approval?/1, 
+            "finaliser", 
+            "rejetter"
+        )
         |> B.job("rejetter", &reject/1, "end")
         |> B.job("finaliser", &finalise/1, "end")
         |> B.build("RVAT")
-    end
-
-    defstruct [:document, :status, :synthese, :approved, :verified, :approved_by_id, :verified_by]
-
-    @types %{
-        document: Sifu.Document.Type,
-        status: :string,
-        synthese: :string,
-        approved: :boolean,
-        verified: :boolean,
-        approved_by_id: :integer,
-        verified_by_id: :integer
-    }
-
-    def insert(changeset) do
-        changeset
-        |> apply_action(:insert)
-    end
-
-    def verify(changeset) do
-        changeset
-        |> apply_action(:update)
-    end
-
-    def approve(changeset) do
-        changeset
-        |> apply_action(:update)
-    end
-
-
-    def initiate_changeset(context, params) do
-        params = params
-        |> Map.merge(%{
-            "status" => "en_cours",
-            "verified" => false, 
-            "approved" => false
-        })
-
-        {context, @types}
-        |> cast(params, [:status, :synthese, :approved, :verified, :approved_by_id, :verified_by_id])
-        |> cast_attachments(params, [:document])
-        |> validate_required([
-            :document, 
-            :synthese,
-            :verified, 
-            :approved, 
-            :approved_by_id, 
-            :verified_by_id
-        ])
-    end
-
-    def verify_changeset(context, params) do
-        context = context |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
-        {context, @types}
-        |> cast(params, [:verified])
-        |> validate_required([:verified])
-    end
-
-    def approve_changeset(context, params) do
-        context = context |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
-        {context, @types}
-        |> cast(params, [:approved])
-        |> validate_required([:approved])
-    end
-
-    def all() do
-        from(p in Process, where: p.flow_type == "rvat") |> Workflow.Repo.all()
-    end
-
-    def get(pid) do
-        from(p in Process, where: p.flow_type == "rvat", where: p.id == ^pid) |> Workflow.Repo.one()
-    end
-
-    def get_verification_url(task) do
-        SifuWeb.Router.Helpers.rvat_verify_path(SifuWeb.Endpoint, :verify, task.id)
-    end
-
-    def get_approval_url(task) do
-        SifuWeb.Router.Helpers.rvat_approval_path(SifuWeb.Endpoint, :approval, task.id)
     end
 
     def assign_user_for_verification(context) do
@@ -110,18 +75,18 @@ defmodule Sifu.Workflow.RVAT do
         Reject the workflow job
     """
     def reject(context) do
-        {:ok, context |> Map.put("status", "rejetté")}
+        {:ok, context |> Map.put(:status, "rejetté")}
     end
 
     def finalise(context) do
-        {:ok, context |> Map.put("status", "terminé")}
+        {:ok, context |> Map.put(:status, "terminé")}
     end
 
     def check_for_verification?(context) do
-        context["verified"]
+        context["verifier"]
     end
 
     def check_for_approval?(context) do
-        context["approved"]
+        context["approuver"]
     end
 end

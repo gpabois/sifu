@@ -78,23 +78,17 @@ defmodule SifuWeb.Router do
   scope "/", SifuWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    scope "/rvat" do
-      get "/",     RVATListController, :list
-      
-      get "/new",  RVATInitiateController, :new
-      post "/new", RVATInitiateController, :create
-      
-      get "/:pid", RVATIndexController, :index
-      get "/:pid/delete", RVATIndexController, :delete
+    get "/workflow/new/:flow_type",  ProcessController, :new
+    post "/workflow/new/:flow_type", ProcessController, :create
 
-      get "/:id/verify", RVATVerifyController, :verify
-      post "/:id/verify", RVATVerifyController, :execute
+    get "/process/:process_id", ProcessController, :show
+    
+    get "/task/:task_id/user_action", TaskController, :prepare_user_action
+    post "/task/:task_id/user_action", TaskController, :process_user_action
 
-      get "/:id/approve", RVATApprovalController, :approval
-      post "/:id/approve", RVATApprovalController, :execute
-    end
-
-    get "/users/tasks", UserTasksController, :list
+    get "/rvat", ProcessController, :list_rvat
+    
+    get "/users/tasks",    UserTasksController,    :list
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email

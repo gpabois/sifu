@@ -9,7 +9,7 @@ defmodule Sifu.Application do
   def start(_type, _args) do
     children = [
       # Start the Workflow Engine
-      {Workflow, [rvat: Sifu.Workflow.RVAT.get_flow()]},
+      {Workflow, [RVAT: Sifu.Workflow.RVAT.get_flow()]},
       # Start the Ecto repository
       Sifu.Repo,
       # Start the Telemetry supervisor

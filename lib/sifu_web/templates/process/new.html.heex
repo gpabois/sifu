@@ -1,0 +1,9 @@
+<div class="fr-container">
+<h1>Nouveau <%= @flow.name %></h1>
+
+<%= form_for @changeset, Routes.process_path(@conn, :create, @flow.name), [multipart: true, as: :initiate], fn f -> %>
+    <%= SifuWeb.WorkflowFormHelpers.render_fields(f, @fields) %>
+    <%= submit "Envoyer", class: "fr-btn" %>
+<% end %>
+<br>
+</div>

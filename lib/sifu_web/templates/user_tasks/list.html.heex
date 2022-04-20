@@ -21,7 +21,7 @@
                     <td><%= task.status %></td>
                     <td><%= if task.started_at != nil, do: Timex.from_now(task.started_at, "fr"), else: "N/D" %></td>
                     <td><%= if task.finished_at != nil, do: Timex.from_now(task.finished_at, "fr"), else: "N/D" %></td>
-                    <td><%= link "Executer", to: Workflow.Task.view_url(task), class: "fr-btn" %></td>
+                    <td><%= link "Executer", to: Routes.task_path(@conn, :prepare_user_action, task.id), class: "fr-btn" %></td>
                 </tr>
                 <% end %>
             </tbody>
