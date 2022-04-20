@@ -3,7 +3,25 @@
 
     <%= link "Nouveau", to: Routes.process_path(@conn, :new, "RVAT"), class: "fr-btn" %>
 
-    <%= for process <- @processes do %>
-        <%= process.id %><br>
-    <% end %>
+    <div class="fr-table">
+    <table>
+        <thead>
+            <th>#</th>
+            <th>Document</th>
+            <th>Statut</th>
+            <th>Crée par</th>
+        </thead>
+        <tbody>
+        <%= for process <- @processes do %>
+            <% context = process.context %>
+            <tr>
+                <td><%= process.id %></td>
+                <td><%= context["document"]["file_name"] %></td>
+                <td><%= context["status"] %></td>
+                <td><%= if process.created_by, do: process.created_by.email %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+    </div>
 </div>
